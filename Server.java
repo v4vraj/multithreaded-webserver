@@ -14,7 +14,7 @@ public class Server {
     
     public Consumer<Socket> getConsumer(){
         return (clientSocket)->{
-            try(PrintWriter toClient = new PrintWriter(clientSocket.getOutputStream());
+            try(PrintWriter toClient = new PrintWriter(clientSocket.getOutputStream(),true);
                 BufferedReader fileReader = new BufferedReader(new FileReader("./test.txt"))
                 ) {
                 StringBuilder fileContent = new StringBuilder();
@@ -26,6 +26,12 @@ public class Server {
                 toClient.flush();
             } catch (Exception e) {
                 e.printStackTrace();
+            }finally{
+                try {
+                    clientSocket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
     }   
